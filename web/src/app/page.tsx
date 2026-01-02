@@ -1,18 +1,17 @@
 import { SubmitForm } from "@/components/SubmitForm";
 import { SubmissionFeed } from "@/components/SubmissionFeed";
-import { SubmissionMap } from "@/components/SubmissionMap";
+import { SubmissionMapClient } from "@/components/SubmissionMapClient";
 import { createSupabaseAdmin } from "@/lib/supabaseAdmin";
 import type { Submission } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const isSupabaseConfigured = Boolean(
-    process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY,
-  );
-
+  let isSupabaseConfigured = false;
   let submissions: Submission[] = [];
-  if (isSupabaseConfigured) {
+
+  // Try to create Supabase client - if it works, we're configured
+  try {
     const supabase = createSupabaseAdmin();
     const { data, error } = await supabase
       .from("submissions")
@@ -21,7 +20,13 @@ export default async function Home() {
       )
       .order("created_at", { ascending: false })
       .limit(50);
+    
+    // If we can query (even if empty), Supabase is configured
+    isSupabaseConfigured = true;
     if (!error) submissions = (data ?? []) as Submission[];
+  } catch {
+    // If createSupabaseAdmin throws (missing env vars), not configured
+    isSupabaseConfigured = false;
   }
 
   return (
@@ -112,7 +117,7 @@ export default async function Home() {
               <h2 className="mb-6 font-serif text-2xl font-semibold text-[var(--foreground)] sm:text-3xl">
                 Around Pasadena
               </h2>
-              <SubmissionMap submissions={submissions} />
+              <SubmissionMapClient submissions={submissions} />
             </div>
           </div>
         </section>

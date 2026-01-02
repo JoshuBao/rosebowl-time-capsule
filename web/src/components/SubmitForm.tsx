@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useRef, useState, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { submitMemory, type SubmitMemoryState } from "@/app/actions";
 
@@ -31,7 +31,7 @@ function SubmitButton() {
 const initialState: SubmitMemoryState = { ok: false, error: "" };
 
 export function SubmitForm() {
-  const [state, formAction] = useFormState(submitMemory, initialState);
+  const [state, formAction] = useActionState(submitMemory, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [geo, setGeo] = useState<
@@ -40,12 +40,59 @@ export function SubmitForm() {
     | { status: "ready"; lat: number; lng: number }
     | { status: "error"; message: string }
   >({ status: "idle" });
+  
+  const [addressInput, setAddressInput] = useState("");
 
   useEffect(() => {
     if (state.ok) {
       formRef.current?.reset();
+      setGeo({ status: "idle" });
+      setAddressInput("");
     }
   }, [state.ok]);
+
+  const handleGeocode = async () => {
+    if (!addressInput.trim()) return;
+    
+    setGeo({ status: "loading" });
+    
+    try {
+      // Use OpenStreetMap Nominatim API (free, no API key needed)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressInput.trim())}&limit=1`,
+        {
+          headers: {
+            "User-Agent": "RoseBowlTimeCapsule/1.0", // Required by Nominatim
+          },
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error("Geocoding service unavailable");
+      }
+      
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const result = data[0];
+        setGeo({
+          status: "ready",
+          lat: parseFloat(result.lat),
+          lng: parseFloat(result.lon),
+        });
+      } else {
+        setGeo({
+          status: "error",
+          message: "Address not found. Try a more specific location.",
+        });
+      }
+    } catch (error) {
+      setGeo({
+        status: "error",
+        message: "Couldn't find that address. Try a different search term.",
+      });
+    }
+  };
 
   const lat = geo.status === "ready" ? String(geo.lat) : "";
   const lng = geo.status === "ready" ? String(geo.lng) : "";
@@ -103,7 +150,10 @@ export function SubmitForm() {
               {geo.status === "ready" ? (
                 <button
                   type="button"
-                  onClick={() => setGeo({ status: "idle" })}
+                  onClick={() => {
+                    setGeo({ status: "idle" });
+                    setAddressInput("");
+                  }}
                   className="rounded-full border border-[var(--foreground)]/10 bg-[var(--background)] px-3 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--foreground)]/5"
                 >
                   Clear
@@ -144,12 +194,38 @@ export function SubmitForm() {
             </div>
           </div>
 
+          <div className="grid gap-2">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={addressInput}
+                onChange={(e) => setAddressInput(e.target.value)}
+                placeholder="Type an address (e.g., 'Colorado Blvd, Pasadena' or 'Rose Bowl Stadium')"
+                className="flex-1 rounded-xl border border-[var(--foreground)]/10 bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/40 focus:border-[var(--sky)]/40 focus:outline-none focus:ring-2 focus:ring-[var(--sky)]/20"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && addressInput.trim()) {
+                    e.preventDefault();
+                    handleGeocode();
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={handleGeocode}
+                disabled={!addressInput.trim() || geo.status === "loading"}
+                className="rounded-xl border border-[var(--sky)]/30 bg-[var(--sky)]/10 px-4 py-2 text-xs font-medium text-[var(--sky)] transition-colors hover:bg-[var(--sky)]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Find
+              </button>
+            </div>
+          </div>
+
           <input type="hidden" name="lat" value={lat} />
           <input type="hidden" name="lng" value={lng} />
 
           {geo.status === "loading" && (
             <p className="text-xs text-[var(--foreground)]/60">
-              Getting your location...
+              {addressInput ? "Looking up address..." : "Getting your location..."}
             </p>
           )}
           {geo.status === "ready" && (

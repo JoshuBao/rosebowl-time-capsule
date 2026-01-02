@@ -24,8 +24,8 @@ Open `http://localhost:3000`.
 3) Create a Storage bucket (default name: `rose-bowl-media`)
    - Make it **public** (so `getPublicUrl()` works), or change the app to use signed URLs
 4) Put your env vars into `web/.env.local`:
-   - **SUPABASE_URL**: Project URL
-   - **SUPABASE_SERVICE_ROLE_KEY**: Service role key (server-only)
+   - **NEXT_PUBLIC_SUPABASE_URL** (or `SUPABASE_URL`): Project URL
+   - **NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY** (or `SUPABASE_SERVICE_ROLE_KEY`): Publishable key or service role key
    - **SUPABASE_STORAGE_BUCKET**: Bucket name (optional; defaults to `rose-bowl-media`)
 
 ### Table SQL
