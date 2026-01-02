@@ -18,6 +18,26 @@ export const metadata: Metadata = {
   title: "Rose Bowl Time Capsule",
   description:
     "A living, crowd-sourced archive of where people were and what they felt during the Rose Parade / Rose Bowl.",
+  openGraph: {
+    title: "Rose Bowl Time Capsule",
+    description:
+      "A living, crowd-sourced archive of where people were and what they felt during the Rose Parade / Rose Bowl.",
+    images: [
+      {
+        url: "/social.png",
+        width: 1200,
+        height: 630,
+        alt: "Rose Bowl Time Capsule",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rose Bowl Time Capsule",
+    description:
+      "A living, crowd-sourced archive of where people were and what they felt during the Rose Parade / Rose Bowl.",
+    images: ["/social.png"],
+  },
 };
 
 export default function RootLayout({
