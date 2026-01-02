@@ -86,7 +86,7 @@ export function SubmitForm() {
           message: "Address not found. Try a more specific location.",
         });
       }
-    } catch (error) {
+    } catch {
       setGeo({
         status: "error",
         message: "Couldn't find that address. Try a different search term.",

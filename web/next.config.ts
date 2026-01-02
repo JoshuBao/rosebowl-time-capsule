@@ -6,11 +6,6 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "10mb",
     },
-    // Explicitly set Turbopack root to silence warning about multiple lockfiles
-    // This tells Turbopack the project root is the 'web' directory
-    turbopack: {
-      root: ".",
-    },
   },
 };
 

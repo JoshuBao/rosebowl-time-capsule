@@ -32,20 +32,31 @@ export default async function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <header className="relative overflow-hidden border-b border-[var(--foreground)]/5 bg-gradient-to-b from-[var(--beige)] to-[var(--background)] px-4 py-16 sm:px-6 sm:py-24 lg:py-32">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rose)]/20 bg-[var(--background)]/80 px-4 py-1.5 text-sm font-medium text-[var(--rose-deep)] shadow-sm backdrop-blur-sm">
+      <header className="relative overflow-hidden border-b border-[var(--foreground)]/5 px-4 py-16 sm:px-6 sm:py-24 lg:py-32">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url(/rosebowl.jpg)",
+          }}
+        >
+          {/* Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)]/95 via-[var(--background)]/90 to-[var(--background)]/95"></div>
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-4xl text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rose)]/30 bg-[var(--background)]/90 px-4 py-1.5 text-sm font-medium text-[var(--rose-deep)] shadow-lg backdrop-blur-md">
             <span>🌹</span>
             <span className="tracking-wide">Rose Bowl Time Capsule</span>
           </div>
 
-          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
+          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-[var(--foreground)] drop-shadow-sm sm:text-5xl lg:text-6xl">
             Where were you on
             <br />
             <span className="text-[var(--rose-deep)]">New Year&apos;s Day?</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[var(--foreground)]/70 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[var(--foreground)]/80 drop-shadow-sm sm:text-xl">
             A digital scrapbook of moments from the Rose Parade and Rose Bowl.
             Share where you were, how it felt, and become part of the archive.
           </p>
@@ -53,24 +64,18 @@ export default async function Home() {
           <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <a
               href="#submit"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--rose-deep)] px-8 py-3.5 text-base font-medium text-white shadow-lg shadow-[var(--rose)]/20 transition-all hover:scale-105 hover:bg-[var(--rose)] hover:shadow-xl hover:shadow-[var(--rose)]/30"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--rose-deep)] px-8 py-3.5 text-base font-medium text-white shadow-xl shadow-[var(--rose)]/30 transition-all hover:scale-105 hover:bg-[var(--rose)] hover:shadow-2xl hover:shadow-[var(--rose)]/40"
             >
               Add your memory
               <span className="text-lg">→</span>
             </a>
             <a
               href="#memories"
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--foreground)]/10 bg-[var(--background)]/80 px-8 py-3.5 text-base font-medium text-[var(--foreground)] backdrop-blur-sm transition-all hover:border-[var(--foreground)]/20 hover:bg-[var(--background)]"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--foreground)]/20 bg-[var(--background)]/90 px-8 py-3.5 text-base font-medium text-[var(--foreground)] shadow-lg backdrop-blur-md transition-all hover:border-[var(--foreground)]/30 hover:bg-[var(--background)]/95"
             >
               Explore memories
             </a>
           </div>
-        </div>
-
-        {/* Decorative elements */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-10">
-          <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-[var(--rose)] blur-3xl"></div>
-          <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-[var(--gold)] blur-3xl"></div>
         </div>
       </header>
 
