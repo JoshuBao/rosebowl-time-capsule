@@ -11,9 +11,19 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center rounded-xl bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+      className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--rose-deep)] px-8 py-3 text-base font-medium text-white shadow-lg shadow-[var(--rose)]/20 transition-all hover:scale-105 hover:bg-[var(--rose)] hover:shadow-xl hover:shadow-[var(--rose)]/30 disabled:opacity-50 disabled:hover:scale-100"
     >
-      {pending ? "Saving…" : "Add to the capsule"}
+      {pending ? (
+        <>
+          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+          Saving your memory...
+        </>
+      ) : (
+        <>
+          Add to the capsule
+          <span>→</span>
+        </>
+      )}
     </button>
   );
 }
@@ -44,16 +54,11 @@ export function SubmitForm() {
     <form
       ref={formRef}
       action={formAction}
-      className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm"
+      className="rounded-3xl border border-[var(--foreground)]/10 bg-gradient-to-br from-[var(--background)] to-[var(--beige)] p-8 shadow-xl shadow-[var(--shadow)]"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold">Add your memory</h2>
-          <p className="mt-1 text-sm text-black/60">
-            Where were you watching from, and what did it feel like?
-          </p>
-        </div>
-      </div>
+      <p className="mb-6 text-base leading-relaxed text-[var(--foreground)]/70">
+        No account needed. Just share a moment that mattered to you.
+      </p>
 
       {/* Honeypot (bots fill this) */}
       <input
@@ -63,41 +68,45 @@ export function SubmitForm() {
         className="hidden"
       />
 
-      <div className="mt-4 grid gap-3">
-        <label className="grid gap-1">
-          <span className="text-sm font-medium">Where were you watching?</span>
+      <div className="grid gap-6">
+        <label className="grid gap-2">
+          <span className="text-sm font-medium tracking-wide text-[var(--foreground)]/80">
+            Where were you?
+          </span>
           <input
             name="location_text"
             required
-            placeholder="Colorado Blvd near Orange Grove, couch in LA, etc."
-            className="w-full rounded-xl border border-black/10 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
+            placeholder="Along Colorado Blvd, on my couch in Echo Park..."
+            className="w-full rounded-2xl border border-[var(--foreground)]/10 bg-[var(--background)] px-4 py-3 text-base text-[var(--foreground)] placeholder:text-[var(--foreground)]/40 focus:border-[var(--rose)]/40 focus:outline-none focus:ring-2 focus:ring-[var(--rose)]/20"
           />
         </label>
 
-        <label className="grid gap-1">
-          <span className="text-sm font-medium">A sentence or two</span>
+        <label className="grid gap-2">
+          <span className="text-sm font-medium tracking-wide text-[var(--foreground)]/80">
+            What was it like?
+          </span>
           <textarea
             name="message"
             required
-            rows={3}
-            placeholder="What did you notice? Who were you with? What hit you emotionally?"
-            className="w-full resize-y rounded-xl border border-black/10 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
+            rows={4}
+            placeholder="The sun was warm, families lined the street. I felt..."
+            className="w-full resize-y rounded-2xl border border-[var(--foreground)]/10 bg-[var(--background)] px-4 py-3 text-base leading-relaxed text-[var(--foreground)] placeholder:text-[var(--foreground)]/40 focus:border-[var(--rose)]/40 focus:outline-none focus:ring-2 focus:ring-[var(--rose)]/20"
           />
         </label>
 
-        <div className="grid gap-2">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-sm font-medium">
-              Optional: add a pin (approx)
+        <div className="grid gap-3 rounded-2xl border border-[var(--foreground)]/5 bg-[var(--beige)]/50 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="text-sm font-medium tracking-wide text-[var(--foreground)]/80">
+              📍 Pin your location (optional)
             </span>
             <div className="flex items-center gap-2">
               {geo.status === "ready" ? (
                 <button
                   type="button"
                   onClick={() => setGeo({ status: "idle" })}
-                  className="rounded-xl border border-black/10 px-3 py-1.5 text-xs font-medium hover:bg-black/5"
+                  className="rounded-full border border-[var(--foreground)]/10 bg-[var(--background)] px-3 py-1.5 text-xs font-medium transition-colors hover:bg-[var(--foreground)]/5"
                 >
-                  Clear pin
+                  Clear
                 </button>
               ) : null}
               <button
@@ -122,13 +131,13 @@ export function SubmitForm() {
                     () => {
                       setGeo({
                         status: "error",
-                        message: "Couldn’t get location. (Permission denied?)",
+                        message: "Couldn't get location. (Permission denied?)",
                       });
                     },
                     { enableHighAccuracy: false, timeout: 8000 },
                   );
                 }}
-                className="rounded-xl border border-black/10 px-3 py-1.5 text-xs font-medium hover:bg-black/5"
+                className="rounded-full border border-[var(--sky)]/30 bg-[var(--sky)]/10 px-3 py-1.5 text-xs font-medium text-[var(--sky)] transition-colors hover:bg-[var(--sky)]/20"
               >
                 Use my location
               </button>
@@ -139,37 +148,47 @@ export function SubmitForm() {
           <input type="hidden" name="lng" value={lng} />
 
           {geo.status === "loading" && (
-            <p className="text-xs text-black/60">Getting your location…</p>
+            <p className="text-xs text-[var(--foreground)]/60">
+              Getting your location...
+            </p>
           )}
           {geo.status === "ready" && (
-            <p className="text-xs text-black/60">
-              Pin saved as approx coords. (You can submit without a pin.)
+            <p className="text-xs text-[var(--sky)]">
+              ✓ Location saved (approximate). You&apos;ll appear on the map.
             </p>
           )}
           {geo.status === "error" && (
-            <p className="text-xs text-red-600">{geo.message}</p>
+            <p className="text-xs text-[var(--rose-deep)]">{geo.message}</p>
           )}
         </div>
 
-        <label className="grid gap-1">
-          <span className="text-sm font-medium">Optional photo / clip</span>
+        <label className="grid gap-2">
+          <span className="text-sm font-medium tracking-wide text-[var(--foreground)]/80">
+            Add a photo or video (optional)
+          </span>
           <input
             name="media"
             type="file"
             accept="image/*,video/*"
-            className="block w-full text-sm file:mr-4 file:rounded-xl file:border-0 file:bg-black file:px-4 file:py-2 file:text-sm file:font-medium file:text-white"
+            className="block w-full rounded-2xl border border-[var(--foreground)]/10 bg-[var(--background)] px-4 py-3 text-sm text-[var(--foreground)] file:mr-4 file:rounded-full file:border-0 file:bg-[var(--rose-deep)] file:px-4 file:py-2 file:text-sm file:font-medium file:text-white file:transition-colors hover:file:bg-[var(--rose)]"
           />
-          <p className="text-xs text-black/60">Up to 8MB.</p>
+          <p className="text-xs text-[var(--foreground)]/50">Up to 8MB</p>
         </label>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-4">
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <SubmitButton />
-        <div className="text-right text-sm">
+        <div className="text-sm">
           {!state.ok && state.error ? (
-            <span className="text-red-600">{state.error}</span>
+            <div className="rounded-full bg-[var(--rose-deep)]/10 px-4 py-2 text-[var(--rose-deep)]">
+              {state.error}
+            </div>
           ) : null}
-          {state.ok ? <span className="text-green-700">{state.message}</span> : null}
+          {state.ok ? (
+            <div className="rounded-full bg-[var(--sky)]/20 px-4 py-2 text-[var(--sky)]">
+              ✓ {state.message}
+            </div>
+          ) : null}
         </div>
       </div>
     </form>

@@ -25,51 +25,117 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-black">
-      <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
-        <header className="mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-medium text-black/70">
-            <span className="text-rose-600">🌹</span>
-            <span>Rose Bowl Time Capsule</span>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <header className="relative overflow-hidden border-b border-[var(--foreground)]/5 bg-gradient-to-b from-[var(--beige)] to-[var(--background)] px-4 py-16 sm:px-6 sm:py-24 lg:py-32">
+        <div className="mx-auto max-w-4xl text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--rose)]/20 bg-[var(--background)]/80 px-4 py-1.5 text-sm font-medium text-[var(--rose-deep)] shadow-sm backdrop-blur-sm">
+            <span>🌹</span>
+            <span className="tracking-wide">Rose Bowl Time Capsule</span>
           </div>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Where were you — and what did it feel like?
+
+          <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
+            Where were you on
+            <br />
+            <span className="text-[var(--rose-deep)]">New Year&apos;s Day?</span>
           </h1>
-          <p className="mt-3 max-w-2xl text-base leading-7 text-black/60">
-            A living, crowd-sourced archive of the Rose Parade / Rose Bowl moment.
-            No logins. Just quick memories, pinned around Pasadena/LA.
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[var(--foreground)]/70 sm:text-xl">
+            A digital scrapbook of moments from the Rose Parade and Rose Bowl.
+            Share where you were, how it felt, and become part of the archive.
           </p>
-        </header>
 
-        {!isSupabaseConfigured ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
-            Supabase isn’t configured yet. Add{" "}
-            <code className="font-mono">SUPABASE_URL</code> and{" "}
-            <code className="font-mono">SUPABASE_SERVICE_ROLE_KEY</code> in{" "}
-            <code className="font-mono">web/.env.local</code> (see{" "}
-            <code className="font-mono">web/README.md</code>).
-          </div>
-        ) : null}
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start">
-          <SubmitForm />
-          <div className="grid gap-3">
-            <h2 className="text-sm font-semibold text-black/70">
-              Pinned memories
-            </h2>
-            <SubmissionMap submissions={submissions} />
+          <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <a
+              href="#submit"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--rose-deep)] px-8 py-3.5 text-base font-medium text-white shadow-lg shadow-[var(--rose)]/20 transition-all hover:scale-105 hover:bg-[var(--rose)] hover:shadow-xl hover:shadow-[var(--rose)]/30"
+            >
+              Add your memory
+              <span className="text-lg">→</span>
+            </a>
+            <a
+              href="#memories"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--foreground)]/10 bg-[var(--background)]/80 px-8 py-3.5 text-base font-medium text-[var(--foreground)] backdrop-blur-sm transition-all hover:border-[var(--foreground)]/20 hover:bg-[var(--background)]"
+            >
+              Explore memories
+            </a>
           </div>
         </div>
 
-        <section className="mt-10">
-          <div className="mb-3 flex items-end justify-between gap-3">
-            <h2 className="text-sm font-semibold text-black/70">
-              Latest submissions
+        {/* Decorative elements */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-10">
+          <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-[var(--rose)] blur-3xl"></div>
+          <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-[var(--gold)] blur-3xl"></div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
+        {!isSupabaseConfigured ? (
+          <div className="mb-12 rounded-2xl border border-[var(--gold)]/30 bg-gradient-to-br from-[var(--beige)] to-[var(--background)] p-6 shadow-lg shadow-[var(--shadow)]">
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 text-2xl">📋</div>
+              <div>
+                <h3 className="mb-1 font-serif text-lg font-semibold text-[var(--foreground)]">
+                  Setup Required
+                </h3>
+                <p className="text-sm leading-relaxed text-[var(--foreground)]/70">
+                  To get started, copy{" "}
+                  <code className="rounded bg-[var(--beige-dark)] px-1.5 py-0.5 font-mono text-xs">
+                    web/.env.example
+                  </code>{" "}
+                  to{" "}
+                  <code className="rounded bg-[var(--beige-dark)] px-1.5 py-0.5 font-mono text-xs">
+                    web/.env.local
+                  </code>{" "}
+                  and add your Supabase credentials. See{" "}
+                  <code className="rounded bg-[var(--beige-dark)] px-1.5 py-0.5 font-mono text-xs">
+                    web/README.md
+                  </code>{" "}
+                  for details.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Submission Form + Map */}
+        <section id="submit" className="mb-16 scroll-mt-8">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div>
+              <h2 className="mb-6 font-serif text-2xl font-semibold text-[var(--foreground)] sm:text-3xl">
+                Share your moment
+              </h2>
+              <SubmitForm />
+            </div>
+
+            <div>
+              <h2 className="mb-6 font-serif text-2xl font-semibold text-[var(--foreground)] sm:text-3xl">
+                Around Pasadena
+              </h2>
+              <SubmissionMap submissions={submissions} />
+            </div>
+          </div>
+        </section>
+
+        {/* Memory Gallery */}
+        <section id="memories" className="scroll-mt-8">
+          <div className="mb-8 flex items-end justify-between border-b border-[var(--foreground)]/5 pb-4">
+            <h2 className="font-serif text-2xl font-semibold text-[var(--foreground)] sm:text-3xl">
+              Collected Memories
             </h2>
-            <p className="text-xs text-black/50">Newest first</p>
+            <p className="text-sm text-[var(--foreground)]/50">
+              {submissions.length} {submissions.length === 1 ? "memory" : "memories"}
+            </p>
           </div>
           <SubmissionFeed submissions={submissions} />
         </section>
+
+        {/* Footer */}
+        <footer className="mt-20 border-t border-[var(--foreground)]/5 pt-12 text-center">
+          <p className="text-sm text-[var(--foreground)]/40">
+            Captured January 2026 • A community archive
+          </p>
+        </footer>
       </main>
     </div>
   );
